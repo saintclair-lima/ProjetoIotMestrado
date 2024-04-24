@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RElatório - Temperaturas Lidas</title>
+    <title>Relatório - Temperaturas Lidas</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <style>
         body {
-            
-            font: small-caps lighter 43px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+            font: small-caps lighter 30px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
             text-align:left;
             width: 50%;
             margin: 40px auto;
@@ -41,25 +40,6 @@
             background-color: #777;
         }
     </style>
-</head>
-<body>
-    <canvas id="grafico" style="width:100%;max-width:600px"></canvas>
-    <table id="tabelaTemperaturas">
-        <thead>
-            <tr>
-                <th>ID Dispositivo</th>
-                <th>Temperatura</th>
-                <th>Leitura</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Coluna 1</td>
-                <td>Coluna 2</td>
-                <td>Coluna 3</td>
-            </tr>
-        </tbody>
-    </table>
 
     <script>
         function updateTable() {
@@ -69,6 +49,9 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     const data = JSON.parse(xhr.responseText);
+                    let datasetLeituras = gerarDatasetLeituras(data);
+                    gerarGrafico(datasetLeituras);
+
                     // Update table cells with data
                     const tableBody = document.querySelector('#tabelaTemperaturas tbody');
                     tableBody.innerHTML = ''; // Clear existing rows
@@ -108,26 +91,41 @@
             tamanhos.push(item.data.length);
           }
 
-          let labels = Array.from({ length: Math.max(...tamanhos) }, (_, index) => index + 1)
+          let labels = Array.from({ length: Math.max(...tamanhos) }, (_, index) => index + 1);
 
-          return [dados, labels];
+          return {"labels": labels, "dados":dados};
         }
 
-      new Chart("grafico", {
-        type: "line",
-        data: {
-          labels: gerarDatasetLeituras([])[1],
-          datasets:gerarDatasetLeituras([])[0],
-        },
-        options: {
-          legend: {display: true}
+        function gerarGrafico(informacao){
+          new Chart("grafico", {
+            type: "line",
+            data: {
+              labels: informacao.labels,
+              datasets: informacao.dados,
+            },
+            options: {
+              legend: {display: true}
+            }
+          });
         }
-      });
 
         // Call the function initially and set the interval
         updateTable();
-        setInterval(updateTable, 5000); // 5 seconds
+        setInterval(updateTable, 15000); // 15 seconds
     </script>
+</head>
+<body>
+    <canvas id="grafico" style="width:100%;max-width:600px"></canvas>
+    <table id="tabelaTemperaturas">
+        <thead>
+            <tr>
+                <th>ID Dispositivo</th>
+                <th>Temperatura</th>
+                <th>Leitura</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </body>
 </html>
-
