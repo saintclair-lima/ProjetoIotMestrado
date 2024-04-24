@@ -1,0 +1,12 @@
+CREATE TABLE LeituraTemperatura (DispositivoId INT, Valor NUMERIC, Escala CHAR, Timestamp VARCHAR);
+
+let query = `INSERT INTO LeituraTemperatura (DispositivoId, Valor, Escala, Timestamp)
+VALUES
+(${msg.req.query.idDispositivo},
+ ${msg.req.query.valor},
+ "${msg.req.query.escala}",
+ "${msg.req.query.timestamp}")`;
+
+http://192.168.0.4:1880/registrar-temperatura?idDispositivo=1&valor=37.8&escala='C'&timestamp='918274517'
+
+curl -X POST -d '{"idDispositivo":1, "valor":37.8, "escala":"C", "timestamp":"918274517"}' -H "Content-type: application/json" http://192.168.0.4:1880/registrar-temperatura

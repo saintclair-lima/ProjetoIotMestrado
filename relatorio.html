@@ -1,0 +1,49 @@
+<html>
+<head>
+    <!-- Include any necessary CSS or other scripts -->
+</head>
+<body>
+    <table id="tabelaTemperaturas">
+        <thead>
+            <tr>
+                <th>ID Dispositivo</th>
+                <th>Temperatura</th>
+                <th>Leitura</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        function updateTable() {
+            // Make an AJAX request to your API endpoint
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.0.4:1880/recuperar-leituras', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    // Update table cells with data
+                    const tableBody = document.querySelector('#tabelaTemperaturas tbody');
+                    tableBody.innerHTML = ''; // Clear existing rows
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.DispositivoId}</td>
+                            <td>${item.Valor + " °" + item.Escala}</td>
+                            <td>${new Date(parseInt(item.Timestamp)).toLocaleString() }</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            };
+            xhr.send();
+        }
+
+        // Call the function initially and set the interval
+        updateTable();
+        setInterval(updateTable, 5000); // 5 seconds
+    </script>
+</body>
+</html>
+

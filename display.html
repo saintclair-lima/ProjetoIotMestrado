@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Text Display</title>
+    <script>
+        // Function to update the text on the page
+        async function updateText() {
+            // Make an AJAX request to your API endpoint
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.0.4:1880/recuperar-leituras', true);
+            xhr.onreadystatechange = function () {
+                if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) {
+                    const dados = JSON.parse(xhr.responseText);
+                    const item = dados[dados.length - 1]
+                    const textElement = document.getElementById('bigText');
+                    textElement.textContent = `Temperatura: ${item.Valor} °${item.Escala}`;
+                    const subtitulo =  document.getElementById('sub');
+                    subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`
+                }
+            };
+            xhr.send();
+        }
+
+        // Initial call and interval for updating text
+        updateText();
+        setInterval(updateText, 5000); // Update every 5 seconds
+    </script>
+</head>
+<body>
+    <h1 id="bigText">Loading...</h1>
+    <h2 id="sub"></h2>
+</body>
+</html>
+
