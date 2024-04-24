@@ -1,36 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Text Display</title>
+    <title>Display - Temperatura Atual</title>
+    <style>
+        body {
+            background-color:#2d2d2d;
+            max-width: 50%;
+        }
+
+        #display {
+            font: small-caps lighter 43px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+            text-align:left;
+            width: 50%;
+            margin: 40px auto;
+            color:#fff;
+            border-left: 3px solid #ed1f24;
+            padding: 20px;
+        }
+    </style>
     <script>
-        // Function to update the text on the page
+        // Atualiza o texto da página
         async function updateText() {
-            // Make an AJAX request to your API endpoint
+            // Faz solicitação ao endopoint da API via AJAX
             const xhr = new XMLHttpRequest();
             xhr.open('GET', 'http://192.168.0.4:1880/recuperar-leituras', true);
+
+            // Atualiza os elementos de exibição
             xhr.onreadystatechange = function () {
-                if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) {
+                if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) { // AFAZER: Verificar se realmente precisa considerar 304 (sem alterações)
                     const dados = JSON.parse(xhr.responseText);
                     const item = dados[dados.length - 1]
-                    const textElement = document.getElementById('bigText');
+                    const textElement = document.getElementById('temperatura');
                     textElement.textContent = `Temperatura: ${item.Valor} °${item.Escala}`;
-                    const subtitulo =  document.getElementById('sub');
+                    const subtitulo =  document.getElementById('Leitura');
                     subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`
                 }
             };
             xhr.send();
         }
 
-        // Initial call and interval for updating text
+        // Chamada inicial à função
         updateText();
-        setInterval(updateText, 5000); // Update every 5 seconds
+        setInterval(updateText, 5000); // Atualização a cada 10 segundos
     </script>
 </head>
 <body>
-    <h1 id="bigText">Loading...</h1>
-    <h2 id="sub"></h2>
+    <div id="display">
+        <h1 id="temperatura">Carregando...</h1>
+        <h2 id="leitura">⌛</h2>
+    </div>
 </body>
 </html>
 
