@@ -1,8 +1,49 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <!-- Include any necessary CSS or other scripts -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RElatório - Temperaturas Lidas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+        body {
+            
+            font: small-caps lighter 43px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+            text-align:left;
+            width: 50%;
+            margin: 40px auto;
+            color:#fff;
+            border-left: 3px solid #ed1f24;
+            padding: 20px;
+            background-color:#2d2d2d;
+        }
+
+        #tabelaTemperaturas {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #tabelaTemperaturas th, #tabelaTemperaturas td {
+            border: 1px solid #fff;
+            padding: 8px;
+        }
+
+        #tabelaTemperaturas th {
+            background-color: #076b0c;
+            text-align: left;
+        }
+
+        #tabelaTemperaturas tbody tr:nth-child(even) {
+            background-color: #555;
+        }
+
+        #tabelaTemperaturas tbody tr:nth-child(odd) {
+            background-color: #777;
+        }
+    </style>
 </head>
 <body>
+    <canvas id="grafico" style="width:100%;max-width:600px"></canvas>
     <table id="tabelaTemperaturas">
         <thead>
             <tr>
@@ -12,6 +53,11 @@
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>Coluna 1</td>
+                <td>Coluna 2</td>
+                <td>Coluna 3</td>
+            </tr>
         </tbody>
     </table>
 
@@ -39,6 +85,44 @@
             };
             xhr.send();
         }
+
+        function gerarDatasetLeituras(leituras){
+          const cores = ["Tomato", "Orange", "DodgerBlue", "MediumSeaGreen", "Gray", "SlateBlue", "Violet", "LightGray"]
+          const dados = leituras.reduce((acc, obj) => {
+            const dispositivoId = obj.DispositivoId;
+            const valor = obj.Valor;
+
+            // Check if the device id already exists in the accumulator
+            const existingItem = acc.find(item => item.label === dispositivoId);
+            if (existingItem) {
+                existingItem.data.push(valor);
+            } else {
+                // If not, create a new entry
+                acc.push({ label: dispositivoId, data: [valor], borderColor: cores.pop(), fill: false });
+            }
+            return acc;
+          }, []);
+        
+          tamanhos = []
+          for(let item of dados){
+            tamanhos.push(item.data.length);
+          }
+
+          let labels = Array.from({ length: Math.max(...tamanhos) }, (_, index) => index + 1)
+
+          return [dados, labels];
+        }
+
+      new Chart("grafico", {
+        type: "line",
+        data: {
+          labels: gerarDatasetLeituras([])[1],
+          datasets:gerarDatasetLeituras([])[0],
+        },
+        options: {
+          legend: {display: true}
+        }
+      });
 
         // Call the function initially and set the interval
         updateTable();
