@@ -1,21 +1,23 @@
+// Executar sudo chmod a+rw /dev/ttyUSB0 no terminal
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
 
+ESP8266WebServer server(80);
+
+// Variáveis globais
 int PINO_TERMISTOR = A0;
 int ID_ESTE_DISPOSITIVO = 101;
 float temperatura;
+bool configuracaoAtiva = true;
 
-// Executar sudo chmod a+rw /dev/ttyUSB0 no terminal
-
-// Credenciais da rede
-char* ssid = "brisa-3608279";
-char* password = "denitqdl";
-
-// Informações do servidor
-String nomeServidor = "http://192.168.0.4:1880/registrar-temperatura";
+// Credenciais da rede e informação do servidor
+char* ssid = "Rede StClair";
+char* password = "senhasecreta";
+String ipServidor;
+String nomeServidor; // = "http://192.168.164.216:1880/registrar-temperatura";
 
 void conectarWifi(){
   Serial.begin(115200);
@@ -138,6 +140,16 @@ String enviar_temperatura(float temperatura, String metodo, String nomeServidor)
 void setup() {
   Serial.begin(115200);
   delay(2000);
+  if (configuracaoAtiva){
+    inicializarAP();
+    inicializarServidor();
+    Serial.println("OBS: Necessário se acessar a 'Rede Temporária' e depois a página de configurações ('1.2.3.4/')");
+    while(configuracaoAtiva){
+      server.handleClient();
+    }
+    Serial.println("Informações de rede e servidor registradas");
+    encerrarServidorAP();
+  }
   conectarWifi();
 }
 
@@ -147,5 +159,5 @@ void loop() {
     temperatura = ler_temperatura(true);
     enviar_temperatura(temperatura, "POST", nomeServidor);
   }
-  delay(5000);
+  delay(60000);
 }
