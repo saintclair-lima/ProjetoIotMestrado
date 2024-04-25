@@ -18,7 +18,6 @@ void inicializarServidor(){
     Serial.println("Inicializando Servidor");
     server.on("/",               handleRoot);
     server.on("/configurarRede", handleConfigurar);
-    server.on("/supercalifragilistic", handleSupercalifragilistic);
     server.begin();
     Serial.println("Servidor Inicializado");
 }

@@ -23,21 +23,6 @@ void handleConfigurar(){
   server.send(200, "text/html", pagina);
 }
 
-void handleSupercalifragilistic(){
-  String pagina = "<ul>";
-         pagina += "<li><b>Configuração ativa:</b>";
-         pagina += configuracaoAtiva;
-         pagina += "</li>";
-         pagina += "<li><b>SSID:</b>";
-         pagina += ssid;
-         pagina += "</li>";
-         pagina += "<li><b>Senha:</b>";
-         pagina += password;
-         pagina += "</li>";
-         pagina += "</ul>";
-  server.send(200, "text/html", pagina);
-}
-
 void handleRoot() {
   char* pagina = "<html  lang='pt-BR'>"
                   "<meta charset='UTF-8'>"
@@ -65,7 +50,7 @@ void handleRoot() {
                       "  font-size: 12px;"
                       "  line-height: 30px;"
                       "  color: #777;"
-                      "  background: #4CAF50;"
+                      "  background: #555555;"
                       "}"
                       ""
                       ".container {"
@@ -130,7 +115,7 @@ void handleRoot() {
                       "  cursor: pointer;"
                       "  width: 100%;"
                       "  border: none;"
-                      "  background: #4CAF50;"
+                      "  background: #555555;"
                       "  color: #FFF;"
                       "  margin: 0 0 5px;"
                       "  padding: 10px;"
@@ -138,7 +123,7 @@ void handleRoot() {
                       "}"
                       ""
                       "#configRedeCliente button[type='submit']:hover {"
-                      "  background: #43A047;"
+                      "  background: #333333;"
                       "  -webkit-transition: background 0.3s ease-in-out;"
                       "  -moz-transition: background 0.3s ease-in-out;"
                       "  transition: background-color 0.3s ease-in-out;"
