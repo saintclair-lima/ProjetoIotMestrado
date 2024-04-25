@@ -9,12 +9,22 @@
         body {
             font: small-caps lighter 30px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
             text-align:left;
-            width: 50%;
             margin: 40px auto;
+            width: 100%;
             color:#fff;
             border-left: 3px solid #ed1f24;
             padding: 20px;
             background-color:#2d2d2d;
+        }
+
+        #grafico {
+            background-color:#ffffff;
+            width: 100%;
+        }
+
+        #canvas {
+            background-color:#ffffff;
+            width: 100%;
         }
 
         #tabelaTemperaturas {
@@ -45,7 +55,7 @@
         function updateTable() {
             // Make an AJAX request to your API endpoint
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://192.168.0.4:1880/recuperar-leituras', true);
+            xhr.open('GET', 'http://{{ payload.internalIPv4 }}:1880/recuperar-leituras', true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     const data = JSON.parse(xhr.responseText);
@@ -70,7 +80,7 @@
         }
 
         function gerarDatasetLeituras(leituras){
-          const cores = ["Tomato", "Orange", "DodgerBlue", "MediumSeaGreen", "Gray", "SlateBlue", "Violet", "LightGray"]
+          const cores = ["Tomato", "Orange", "DodgerBlue", "MediumSeaGreen", "Gray", "SlateBlue", "Violet", "LightGray"].reverse();
           const dados = leituras.reduce((acc, obj) => {
             const dispositivoId = obj.DispositivoId;
             const valor = obj.Valor;
@@ -115,7 +125,9 @@
     </script>
 </head>
 <body>
-    <canvas id="grafico" style="width:100%;max-width:600px"></canvas>
+    <div id="canvas">
+        <canvas id="grafico" style="width:100%;"></canvas>
+    </div>
     <table id="tabelaTemperaturas">
         <thead>
             <tr>
