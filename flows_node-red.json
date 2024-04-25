@@ -1,5 +1,380 @@
 [
     {
+        "id": "aec62757f32bc0d1",
+        "type": "tab",
+        "label": "API_Temperatura",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3ba85b566413b6e9",
+        "type": "sqlitedb",
+        "db": "/home/pi/IOT_Database/DBTemperatura",
+        "mode": "RWC"
+    },
+    {
+        "id": "d5dd5745ca1f5523",
+        "type": "http in",
+        "z": "aec62757f32bc0d1",
+        "name": "Get Reg Temperatura",
+        "url": "registrar-temperatura",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 60,
+        "wires": [
+            [
+                "f23f2f473b71d6c4"
+            ]
+        ]
+    },
+    {
+        "id": "84c44b57ff3de216",
+        "type": "http response",
+        "z": "aec62757f32bc0d1",
+        "name": "Resposta",
+        "statusCode": "200",
+        "headers": {},
+        "x": 800,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f23f2f473b71d6c4",
+        "type": "function",
+        "z": "aec62757f32bc0d1",
+        "name": "processar_input",
+        "func": "//msg.payload = {\n//    \"temp\": parseInt(msg.req.query.temp)\n//}\n\nconst timestamp = new Date().getTime();\n\nlet query = `INSERT INTO LeituraTemperatura (DispositivoId, Valor, Escala, Timestamp)\nVALUES\n(${msg.req.query.idDispositivo},\n ${msg.req.query.valor},\n \"${msg.req.query.escala}\",\n \"${timestamp}\")`;\n\nmsg.topic = query\n// msg.statusCode=200\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 60,
+        "wires": [
+            [
+                "7373cf301169141f"
+            ]
+        ]
+    },
+    {
+        "id": "48fcaa52411201ef",
+        "type": "debug",
+        "z": "aec62757f32bc0d1",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "9677e71f22795867",
+        "type": "function",
+        "z": "aec62757f32bc0d1",
+        "name": "Consulta",
+        "func": "msg.topic = \"SELECT * FROM LeituraTemperatura\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 220,
+        "wires": [
+            [
+                "013857120e951f01"
+            ]
+        ]
+    },
+    {
+        "id": "013857120e951f01",
+        "type": "sqlite",
+        "z": "aec62757f32bc0d1",
+        "mydb": "3ba85b566413b6e9",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Consulta",
+        "x": 560,
+        "y": 220,
+        "wires": [
+            [
+                "48fcaa52411201ef",
+                "176cd6883cfae355"
+            ]
+        ]
+    },
+    {
+        "id": "7373cf301169141f",
+        "type": "sqlite",
+        "z": "aec62757f32bc0d1",
+        "mydb": "3ba85b566413b6e9",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Insert Temperatura",
+        "x": 590,
+        "y": 60,
+        "wires": [
+            [
+                "84c44b57ff3de216",
+                "48fcaa52411201ef"
+            ]
+        ]
+    },
+    {
+        "id": "efbc161db26c8b38",
+        "type": "http in",
+        "z": "aec62757f32bc0d1",
+        "name": "Post: Reg Temperatura",
+        "url": "registrar-temperatura",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 120,
+        "wires": [
+            [
+                "2d4a740ba3ecdabe"
+            ]
+        ]
+    },
+    {
+        "id": "e3444f30e30a825a",
+        "type": "http response",
+        "z": "aec62757f32bc0d1",
+        "name": "Resposta",
+        "statusCode": "200",
+        "headers": {},
+        "x": 800,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2d4a740ba3ecdabe",
+        "type": "function",
+        "z": "aec62757f32bc0d1",
+        "name": "processar_input",
+        "func": "\n\nconst timestamp = new Date().getTime();\n\nlet query = `INSERT INTO LeituraTemperatura (DispositivoId, Valor, Escala, Timestamp)\nVALUES\n(${msg.payload.idDispositivo},\n ${msg.payload.valor},\n \"${msg.payload.escala}\",\n \"${timestamp}\")`;\nmsg.topic = query\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "9dd0137312222fe0"
+            ]
+        ]
+    },
+    {
+        "id": "9dd0137312222fe0",
+        "type": "sqlite",
+        "z": "aec62757f32bc0d1",
+        "mydb": "3ba85b566413b6e9",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Insert Temperatura",
+        "x": 590,
+        "y": 120,
+        "wires": [
+            [
+                "e3444f30e30a825a",
+                "48fcaa52411201ef"
+            ]
+        ]
+    },
+    {
+        "id": "176cd6883cfae355",
+        "type": "http response",
+        "z": "aec62757f32bc0d1",
+        "name": "Resposta",
+        "statusCode": "200",
+        "headers": {},
+        "x": 800,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6c61fb9319ebbfa7",
+        "type": "http in",
+        "z": "aec62757f32bc0d1",
+        "name": "Get Rec Leituras",
+        "url": "recuperar-leituras",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 220,
+        "wires": [
+            [
+                "9677e71f22795867"
+            ]
+        ]
+    },
+    {
+        "id": "aa68607953b04f72",
+        "type": "http in",
+        "z": "aec62757f32bc0d1",
+        "name": "Get Display Temperatura",
+        "url": "display",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "7f8c6ab70f55dd8d"
+            ]
+        ]
+    },
+    {
+        "id": "f1ca0d8c91e05402",
+        "type": "template",
+        "z": "aec62757f32bc0d1",
+        "name": "display.html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Display - Temperatura Atual</title>\n    <style>\n        body {\n            background-color:#2d2d2d;\n            width: 100%;\n        }\n\n        #display {\n            font: small-caps lighter 30px/150% \"Segoe UI\", Frutiger, \"Frutiger Linotype\", \"Dejavu Sans\", \"Helvetica Neue\", Arial, sans-serif;\n            text-align:left;\n            margin: 40px auto;\n            color:#fff;\n            border-left: 3px solid #ed1f24;\n            padding: 20px;\n        }\n    </style>\n    <script>\n        // Atualiza o texto da página\n        async function updateText() {\n            // Faz solicitação ao endopoint da API via AJAX\n            const xhr = new XMLHttpRequest();\n            xhr.open('GET', 'http://{{{payload.internalIPv4}}}:1880/recuperar-leituras', true);\n\n            // Atualiza os elementos de exibição\n            xhr.onreadystatechange = function () {\n                if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) { // AFAZER: Verificar se realmente precisa considerar 304 (sem alterações)\n                    const dados = JSON.parse(xhr.responseText);\n                    const item = dados[dados.length - 1]\n                    const textElement = document.getElementById('temperatura');\n                    textElement.textContent = `Temperatura: ${item.Valor} °${item.Escala}`.replace('.',',');\n                    const subtitulo =  document.getElementById('leitura');\n                    subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`\n                }\n            };\n            xhr.send();\n        }\n\n        // Chamada inicial à função\n        updateText();\n        setInterval(updateText, 5000); // Atualização a cada 10 segundos\n    </script>\n</head>\n<body>\n    <div id=\"display\">\n        <h1 id=\"temperatura\">Carregando...</h1>\n        <h2 id=\"leitura\">⌛</h2>\n    </div>\n</body>\n</html>",
+        "output": "str",
+        "x": 570,
+        "y": 300,
+        "wires": [
+            [
+                "719d1614dea1e944"
+            ]
+        ]
+    },
+    {
+        "id": "719d1614dea1e944",
+        "type": "http response",
+        "z": "aec62757f32bc0d1",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "da71397152764214",
+        "type": "http in",
+        "z": "aec62757f32bc0d1",
+        "name": "Get Display Temperatura",
+        "url": "relatorio",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "1c7eb49caedf70f8"
+            ]
+        ]
+    },
+    {
+        "id": "eb86f816c8cac56a",
+        "type": "template",
+        "z": "aec62757f32bc0d1",
+        "name": "relatorio.html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Relatório - Temperaturas Lidas</title>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js\"></script>\n    <style>\n        body {\n            font: small-caps lighter 30px/150% \"Segoe UI\", Frutiger, \"Frutiger Linotype\", \"Dejavu Sans\", \"Helvetica Neue\", Arial, sans-serif;\n            text-align:left;\n            margin: 40px auto;\n            width: 100%;\n            color:#fff;\n            border-left: 3px solid #ed1f24;\n            padding: 20px;\n            background-color:#2d2d2d;\n        }\n\n        #grafico {\n            background-color:#ffffff;\n            width: 100%;\n        }\n\n        #canvas {\n            background-color:#ffffff;\n            width: 100%;\n        }\n\n        #tabelaTemperaturas {\n            border-collapse: collapse;\n            width: 100%;\n        }\n\n        #tabelaTemperaturas th, #tabelaTemperaturas td {\n            border: 1px solid #fff;\n            padding: 8px;\n        }\n\n        #tabelaTemperaturas th {\n            background-color: #076b0c;\n            text-align: left;\n        }\n\n        #tabelaTemperaturas tbody tr:nth-child(even) {\n            background-color: #555;\n        }\n\n        #tabelaTemperaturas tbody tr:nth-child(odd) {\n            background-color: #777;\n        }\n    </style>\n\n    <script>\n        function updateTable() {\n            // Make an AJAX request to your API endpoint\n            const xhr = new XMLHttpRequest();\n            xhr.open('GET', 'http://{{ payload.internalIPv4 }}:1880/recuperar-leituras', true);\n            xhr.onreadystatechange = function () {\n                if (xhr.readyState === 4 && xhr.status === 200) {\n                    const data = JSON.parse(xhr.responseText);\n                    let datasetLeituras = gerarDatasetLeituras(data);\n                    gerarGrafico(datasetLeituras);\n\n                    // Update table cells with data\n                    const tableBody = document.querySelector('#tabelaTemperaturas tbody');\n                    tableBody.innerHTML = ''; // Clear existing rows\n                    data.forEach(item => {\n                        const row = document.createElement('tr');\n                        row.innerHTML = `\n                            <td>${item.DispositivoId}</td>\n                            <td>${item.Valor + \" °\" + item.Escala}</td>\n                            <td>${new Date(parseInt(item.Timestamp)).toLocaleString() }</td>\n                        `;\n                        tableBody.appendChild(row);\n                    });\n                }\n            };\n            xhr.send();\n        }\n\n        function gerarDatasetLeituras(leituras){\n          const cores = [\"Tomato\", \"Orange\", \"DodgerBlue\", \"MediumSeaGreen\", \"Gray\", \"SlateBlue\", \"Violet\", \"LightGray\"].reverse();\n          const dados = leituras.reduce((acc, obj) => {\n            const dispositivoId = obj.DispositivoId;\n            const valor = obj.Valor;\n\n            // Check if the device id already exists in the accumulator\n            const existingItem = acc.find(item => item.label === dispositivoId);\n            if (existingItem) {\n                existingItem.data.push(valor);\n            } else {\n                // If not, create a new entry\n                acc.push({ label: dispositivoId, data: [valor], borderColor: cores.pop(), fill: false });\n            }\n            return acc;\n          }, []);\n        \n          tamanhos = []\n          for(let item of dados){\n            tamanhos.push(item.data.length);\n          }\n\n          let labels = Array.from({ length: Math.max(...tamanhos) }, (_, index) => index + 1);\n\n          return {\"labels\": labels, \"dados\":dados};\n        }\n\n        function gerarGrafico(informacao){\n          new Chart(\"grafico\", {\n            type: \"line\",\n            data: {\n              labels: informacao.labels,\n              datasets: informacao.dados,\n            },\n            options: {\n              legend: {display: true}\n            }\n          });\n        }\n\n        // Call the function initially and set the interval\n        updateTable();\n        setInterval(updateTable, 15000); // 15 seconds\n    </script>\n</head>\n<body>\n    <div id=\"canvas\">\n        <canvas id=\"grafico\" style=\"width:100%;\"></canvas>\n    </div>\n    <table id=\"tabelaTemperaturas\">\n        <thead>\n            <tr>\n                <th>ID Dispositivo</th>\n                <th>Temperatura</th>\n                <th>Leitura</th>\n            </tr>\n        </thead>\n        <tbody>\n        </tbody>\n    </table>\n</body>\n</html>",
+        "output": "str",
+        "x": 570,
+        "y": 360,
+        "wires": [
+            [
+                "0f3dfc449915470e"
+            ]
+        ]
+    },
+    {
+        "id": "0f3dfc449915470e",
+        "type": "http response",
+        "z": "aec62757f32bc0d1",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "7f8c6ab70f55dd8d",
+        "type": "ip",
+        "z": "aec62757f32bc0d1",
+        "name": "ip",
+        "https": false,
+        "timeout": "5000",
+        "internalIPv4": true,
+        "internalIPv6": false,
+        "publicIPv4": true,
+        "publicIPv6": false,
+        "x": 330,
+        "y": 300,
+        "wires": [
+            [
+                "f1ca0d8c91e05402"
+            ]
+        ]
+    },
+    {
+        "id": "1c7eb49caedf70f8",
+        "type": "ip",
+        "z": "aec62757f32bc0d1",
+        "name": "ip",
+        "https": false,
+        "timeout": "5000",
+        "internalIPv4": true,
+        "internalIPv6": false,
+        "publicIPv4": true,
+        "publicIPv6": false,
+        "x": 330,
+        "y": 360,
+        "wires": [
+            [
+                "eb86f816c8cac56a"
+            ]
+        ]
+    },
+    {
+        "id": "a72b74d1345b0adb",
+        "type": "http in",
+        "z": "aec62757f32bc0d1",
+        "name": "Get Criar Tabela",
+        "url": "criar-tabela",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 440,
+        "wires": [
+            [
+                "9a4c5049a5c85638"
+            ]
+        ]
+    },
+    {
         "id": "738883db7026bc94",
         "type": "template",
         "z": "aec62757f32bc0d1",
@@ -15,6 +390,53 @@
         "wires": [
             [
                 "a454ff1da7dc1a1a"
+            ]
+        ]
+    },
+    {
+        "id": "a454ff1da7dc1a1a",
+        "type": "http response",
+        "z": "aec62757f32bc0d1",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "2ce98430e987ddd4",
+        "type": "sqlite",
+        "z": "aec62757f32bc0d1",
+        "mydb": "3ba85b566413b6e9",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "CREATE TABLE",
+        "x": 460,
+        "y": 440,
+        "wires": [
+            [
+                "738883db7026bc94"
+            ]
+        ]
+    },
+    {
+        "id": "9a4c5049a5c85638",
+        "type": "function",
+        "z": "aec62757f32bc0d1",
+        "name": "Consulta",
+        "func": "msg.topic = \"CREATE TABLE LeituraTemperatura (DispositivoId INT, Valor NUMERIC, Escala CHAR, Timestamp VARCHAR);\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 440,
+        "wires": [
+            [
+                "2ce98430e987ddd4"
             ]
         ]
     }
