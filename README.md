@@ -92,6 +92,6 @@ Figura 9: Tela de relatório mostrando série de leituras de vários dispositivo
 ### Display da Última Leitura
 A segunda funcionalidade permite acessar a leitura mais recente feita por um dispositivo específico, juntamente com informações sobre a data e horário da leitura registrada.
 
-![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura10.png?raw=true)
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura10_.png?raw=true)
 
 Figura 10: Tela de apresentação mostrando a leitura de temperatura mais recente de um dispositivo específico
