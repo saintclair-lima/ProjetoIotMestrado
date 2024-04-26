@@ -22,6 +22,7 @@ De forma a alcançar o objetivo proposto, o sistema IoT a ser implementado preci
 
 Desta forma, uma possível arquitetura seria como a da Figura 01, abaixo. Nela teríamos cinco “nós” que viabilizariam a realização de todas as medidas elencadas.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura1.png?raw=true)
 
 Figura 1: possível arquitetura que atende aos requisitos
 
@@ -36,34 +37,39 @@ Também viria pelo concentrador o resultado do processamento dos dados feito pel
 Em virtude de restrições de componentes de hardware e estrutura disponíveis, a arquitetura adotada para construção do projeto prático dá conta somente de uma parte do sistema como um todo. Em vez de uma estrutura em nuvem para atuar como servidor, a qual se comunica intensamente com um broker, foi feita a aglutinação de ambos em um só elemento (rótulo 2, na Figura 2).
 Ademais, dado que não houve a disponibilidade de um sensor de umidade do ar, manteve-se apenas o sensor de temperatura (rótulo 3, na Figura 2). Igualmente perceptível é a ausência dos aparelhos condicionadores de ar, pelo que se configura, este recorte do sistema, somente em um monitor de temperatura atual e de série histórica.
 
-
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura2.png?raw=true)
 
 Figura 2: Esquema de Implementação do Projeto
 
 A forma de implementação efetiva utiliza como componente centralizador de dados um Raspberry Pi atuando como receptor de requisições HTTP, as quais são recebidas por uma API criada e executada no Node-Red. Os dados são coletados e transmitidos ao Raspberry Pi por um Módulo WiFi ESP8266 NodeMcu, utilizando um Termistor de 10K Ohms como sensor de temperatura.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura3.png?raw=true)
 
 Figura 3: Tecnologias utilizadas na implementação
 
 O fluxo de informações primariamente se inicia no cliente HTTP, seja ele o ESP8266, com o envio das leituras de temperatura coletadas, ou o requisitante de relatórios das informações já existentes no banco. A Figura 4, abaixo, representa o fluxo de informações descrito.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura4.png?raw=true)
 
 Figura 4: Fluxo de Dados do Projeto
 
 ## Especificação do Nível de IoT
 A proposta inicial de arquitetura, apresentada na Figura 1, envolvia o emprego de diversos equipamentos nas franjas do sistema IOT (os sensores de temperatura/umidade e os aparelhos de condicionamento de ar), os quais teriam o envio de dados e tráfego de instruções concentrados localmente em um dispositivo broker. Esse dispositivo concentrador seria o responsável para enviar os dados para o servidor na nuvem. Desta forma se enquadraria num IoT Level 4.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura5.png?raw=true)
 
 Figura 5: Representação do IoT Level 4
 
 Com as adaptações feitas, resultando na implementação (Figura 2), contudo, o enquadramento do sistema se faz no IoT Level 3.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura6.png?raw=true)
 
 Figura 6: Representação do IoT Level 3
 
 ## Prototipação: Integração de Dispositivos e Componentes
 No que concerne a integração de equipamentos de hardware, além do Raspberry Pi em si, utilizou-se o já mencionado Módulo WiFi ESP8266 NodeMcu. A ele foi atrelado um termistor de 10K Ohms, junto com um resistor de 10K Ohms, conforme Figura 7, abaixo.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura7.png?raw=true)
 
 Figura 7: Esquema de composição do elemento de leitura e transmissão de valor
 
@@ -74,9 +80,11 @@ Como forma de acesso e consulta aos dados registrados pelo sistema, há um esbo�
 ### Relatório de Leituras
 A primeira funcionalidade recupera um relatório completo com todas as leituras registradas pela aplicação, plotando uma série histórica por dispositivo registrante.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura8.png?raw=true)
 
 Figura 8: Tela de relatório mostrando série de leituras de um único dispositivo
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura9.png?raw=true)
 
 Figura 9: Tela de relatório mostrando série de leituras de vários dispositivos
 
@@ -84,5 +92,6 @@ Figura 9: Tela de relatório mostrando série de leituras de vários dispositivo
 ### Display da Última Leitura
 A segunda funcionalidade permite acessar a leitura mais recente feita por um dispositivo específico, juntamente com informações sobre a data e horário da leitura registrada.
 
+![alt text](https://github.com/saintclair-lima/ProjetoIotMestrado/blob/main/images/Figura10.png?raw=true)
 
 Figura 10: Tela de apresentação mostrando a leitura de temperatura mais recente de um dispositivo específico
