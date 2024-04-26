@@ -83,6 +83,7 @@
         }
         const getPost = async () => {
           const response = await fetch('http://{{{payload.internalIPv4}}}:1880/recuperar-dispositivos');
+          //const response = await fetch('http://{{{payload.internalIPv4}}}:1880/recuperar-leituras');
           const dispositivos = await response.json();
           return dispositivos;
         };
@@ -137,7 +138,6 @@
         };
         xhr.send();
       }
-      updateText();
     </script>
   </body>
 </html> 
