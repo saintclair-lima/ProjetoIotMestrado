@@ -1,54 +1,144 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display - Temperatura Atual</title>
-    <style>
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
         body {
-            background-color:#2d2d2d;
-            width: 100%;
+          background-color:#2d2d2d;
+          width: 100%;
         }
 
         #display {
-            font: small-caps lighter 30px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
-            text-align:left;
-            margin: 40px auto;
-            color:#fff;
-            border-left: 3px solid #ed1f24;
-            padding: 20px;
-        }
-    </style>
-    <script>
-        // Atualiza o texto da página
-        async function updateText() {
-            // Faz solicitação ao endopoint da API via AJAX
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://{{{payload.internalIPv4}}}:1880/recuperar-leituras', true);
-
-            // Atualiza os elementos de exibição
-            xhr.onreadystatechange = function () {
-                if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) { // AFAZER: Verificar se realmente precisa considerar 304 (sem alterações)
-                    const dados = JSON.parse(xhr.responseText);
-                    const item = dados[dados.length - 1]
-                    const textElement = document.getElementById('temperatura');
-                    textElement.textContent = `Temperatura: ${item.Valor} °${item.Escala}`.replace('.',',');
-                    const subtitulo =  document.getElementById('leitura');
-                    subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`
-                }
-            };
-            xhr.send();
+          font: small-caps lighter 20px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+          text-align:left;
+          margin: 40px auto;
+          color:#fff;
+          border-left: 3px solid #ed1f24;
+          padding: 20px;
         }
 
-        // Chamada inicial à função
-        updateText();
-        setInterval(updateText, 5000); // Atualização a cada 10 segundos
-    </script>
-</head>
-<body>
-    <div id="display">
+        .sidenav {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #111;
+          overflow-x: hidden;
+          transition: 0.5s;
+          padding-top: 60px;
+        }
+
+        .sidenav a {
+          font: small-caps lighter 20px/150% "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+          padding: 8px 8px 8px 32px;
+          text-decoration: none;
+          font-size: 25px;
+          color: #818181;
+          display: block;
+          transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+          color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+          position: absolute;
+          top: 0;
+          right: 25px;
+          font-size: 36px;
+          margin-left: 50px;
+        }
+
+        @media screen and (max-height: 450px) {
+          .sidenav {padding-top: 15px;}
+          .sidenav a {font-size: 18px;}
+        }
+      </style>
+    </head>
+    <body>
+      <div id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      </div>
+      <span style="font-size:75px;cursor:pointer" onclick="openNav()">&#9776;</span>
+
+      <div id="display">
+        <h2 id="dispositivo"></h2>
         <h1 id="temperatura">Carregando...</h1>
         <h2 id="leitura">⌛</h2>
-    </div>
-</body>
-</html>
+      </div>
+
+      <!-- Precisa ser abaixo, de forma que os elementos a serem alterados já estejam
+          disponíveis na hora da execução -->
+      <script>
+        let ID_DISPOSITIVO_;
+        function openNav() {
+          document.getElementById("sideNav").style.width = "100%";
+        }
+
+        function closeNav() {
+          document.getElementById("sideNav").style.width = "0";
+        }
+        const getPost = async () => {
+          const response = await fetch('http://{{{payload.internalIPv4}}}:1880/recuperar-dispositivos');
+          //const response = await fetch('http://{{{payload.internalIPv4}}}:1880/recuperar-leituras');
+          const dispositivos = await response.json();
+          return dispositivos;
+        };
+      
+        const sideNav = document.getElementById("sideNav");
+
+        const displayOption = async () => {
+          const dispositivos = await getPost();
+          ID_DISPOSITIVO_ = dispositivos[0].DispositivoId;
+          updateText(ID_DISPOSITIVO_);
+          dispositivos.forEach(dispositivo => {
+              const novoLink = document.createElement("a");
+              novoLink.href = dispositivo.DispositivoId;
+              novoLink.text = "Dispositivo " + dispositivo.DispositivoId;
+              novoLink.addEventListener("click", function(event) {
+                event.preventDefault();
+                alterarDispositivo(dispositivo.DispositivoId);
+                closeNav();
+              });
+              sideNav.appendChild(novoLink);
+          });
+        };
+
+        const alterarDispositivo = (idDispositivo) => {
+          updateText(idDispositivo);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+          displayOption();
+        });
+
+        async function updateText(idDispositivo) {
+          // Faz solicitação ao endopoint da API via AJAX
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', `http://{{{payload.internalIPv4}}}:1880/recuperar-leituras-dispositivo?idDispositivo=${idDispositivo}`, true);
+          //xhr.open('GET', `http://192.168.164.216:1880/recuperar-leituras-dispositivo?idDispositivo=${idDispositivo}`, true);
+
+
+          // Atualiza os elementos de exibição
+          xhr.onreadystatechange = function () {
+            if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) { // AFAZER: Verificar se realmente precisa considerar 304 (sem alterações)
+            const dados = JSON.parse(xhr.responseText);
+            const item = dados[dados.length - 1]
+            console.log(item);
+            const dispositivo = document.getElementById('dispositivo');
+            dispositivo.textContent = `Dispositivo: ${item.DispositivoId}`;
+            const temperatura = document.getElementById('temperatura');
+            temperatura.textContent = `Temperatura: ${item.Valor} °${item.Escala}`.replace('.',',');
+            const subtitulo =  document.getElementById('leitura');
+            subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`
+          }
+        };
+        xhr.send();
+      }
+      updateText();
+    </script>
+  </body>
+</html> 
