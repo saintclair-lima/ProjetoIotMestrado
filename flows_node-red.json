@@ -1,14 +1,6 @@
 [
     {
-        "id": "af9068870a99e40d",
-        "type": "tab",
-        "label": "Fluxo 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "aec62757f32bc0d1",
+        "id": "3da32864abf7bffb",
         "type": "tab",
         "label": "API_Temperatura",
         "disabled": false,
@@ -16,15 +8,9 @@
         "env": []
     },
     {
-        "id": "3ba85b566413b6e9",
-        "type": "sqlitedb",
-        "db": "/home/pi/IOT_Database/DBTemperatura",
-        "mode": "RWC"
-    },
-    {
-        "id": "d5dd5745ca1f5523",
+        "id": "ec9c7dece580fa94",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Reg Temperatura",
         "url": "registrar-temperatura",
         "method": "get",
@@ -34,14 +20,14 @@
         "y": 60,
         "wires": [
             [
-                "f23f2f473b71d6c4"
+                "68b17dc888909c26"
             ]
         ]
     },
     {
-        "id": "84c44b57ff3de216",
+        "id": "a73678c289093518",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Resposta",
         "statusCode": "200",
         "headers": {},
@@ -50,9 +36,9 @@
         "wires": []
     },
     {
-        "id": "f23f2f473b71d6c4",
+        "id": "68b17dc888909c26",
         "type": "function",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "processar_input",
         "func": "const timestamp = new Date().getTime();\n\nlet query = `INSERT INTO LeituraTemperatura (DispositivoId, Valor, Escala, Timestamp)\nVALUES\n(${msg.req.query.idDispositivo},\n ${msg.req.query.valor},\n \"${msg.req.query.escala}\",\n \"${timestamp}\")`;\n\nmsg.topic = query\nreturn msg;",
         "outputs": 1,
@@ -65,14 +51,14 @@
         "y": 60,
         "wires": [
             [
-                "7373cf301169141f"
+                "700022a7d16523ff"
             ]
         ]
     },
     {
-        "id": "9677e71f22795867",
+        "id": "21579e1192fb0010",
         "type": "function",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Consulta",
         "func": "msg.topic = \"SELECT * FROM LeituraTemperatura\"\nreturn msg;",
         "outputs": 1,
@@ -85,14 +71,14 @@
         "y": 220,
         "wires": [
             [
-                "013857120e951f01"
+                "aa3bf6a126930cea"
             ]
         ]
     },
     {
-        "id": "013857120e951f01",
+        "id": "aa3bf6a126930cea",
         "type": "sqlite",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "mydb": "3ba85b566413b6e9",
         "sqlquery": "msg.topic",
         "sql": "",
@@ -101,14 +87,15 @@
         "y": 220,
         "wires": [
             [
-                "176cd6883cfae355"
+                "0e22a25697fcc159",
+                "cca62f5cba68373b"
             ]
         ]
     },
     {
-        "id": "7373cf301169141f",
+        "id": "700022a7d16523ff",
         "type": "sqlite",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "mydb": "3ba85b566413b6e9",
         "sqlquery": "msg.topic",
         "sql": "",
@@ -117,14 +104,15 @@
         "y": 60,
         "wires": [
             [
-                "84c44b57ff3de216"
+                "a73678c289093518",
+                "cca62f5cba68373b"
             ]
         ]
     },
     {
-        "id": "efbc161db26c8b38",
+        "id": "020dd67cb0dbf0b4",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Post: Reg Temperatura",
         "url": "registrar-temperatura",
         "method": "post",
@@ -134,14 +122,14 @@
         "y": 120,
         "wires": [
             [
-                "2d4a740ba3ecdabe"
+                "02a6cb7bc148a354"
             ]
         ]
     },
     {
-        "id": "e3444f30e30a825a",
+        "id": "29869fc9863668dc",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Resposta",
         "statusCode": "200",
         "headers": {},
@@ -150,9 +138,9 @@
         "wires": []
     },
     {
-        "id": "2d4a740ba3ecdabe",
+        "id": "02a6cb7bc148a354",
         "type": "function",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "processar_input",
         "func": "\n\nconst timestamp = new Date().getTime();\n\nlet query = `INSERT INTO LeituraTemperatura (DispositivoId, Valor, Escala, Timestamp)\nVALUES\n(${msg.payload.idDispositivo},\n ${msg.payload.valor},\n \"${msg.payload.escala}\",\n \"${timestamp}\")`;\nmsg.topic = query\nreturn msg;",
         "outputs": 1,
@@ -165,14 +153,14 @@
         "y": 120,
         "wires": [
             [
-                "9dd0137312222fe0"
+                "7501fb8effc45e0c"
             ]
         ]
     },
     {
-        "id": "9dd0137312222fe0",
+        "id": "7501fb8effc45e0c",
         "type": "sqlite",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "mydb": "3ba85b566413b6e9",
         "sqlquery": "msg.topic",
         "sql": "",
@@ -181,14 +169,15 @@
         "y": 120,
         "wires": [
             [
-                "e3444f30e30a825a"
+                "29869fc9863668dc",
+                "cca62f5cba68373b"
             ]
         ]
     },
     {
-        "id": "176cd6883cfae355",
+        "id": "0e22a25697fcc159",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Resposta",
         "statusCode": "200",
         "headers": {},
@@ -197,9 +186,9 @@
         "wires": []
     },
     {
-        "id": "6c61fb9319ebbfa7",
+        "id": "a0d6d4b2673c00a4",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Leituras Todas",
         "url": "recuperar-leituras",
         "method": "get",
@@ -209,14 +198,14 @@
         "y": 220,
         "wires": [
             [
-                "9677e71f22795867"
+                "21579e1192fb0010"
             ]
         ]
     },
     {
-        "id": "aa68607953b04f72",
+        "id": "79caed3a189a0d65",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Display Temperatura",
         "url": "display",
         "method": "get",
@@ -226,33 +215,33 @@
         "y": 400,
         "wires": [
             [
-                "7f8c6ab70f55dd8d"
+                "413e4fcd12d9715f"
             ]
         ]
     },
     {
-        "id": "f1ca0d8c91e05402",
+        "id": "428e7b4a152bf8dc",
         "type": "template",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "display.html",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Display - Temperatura Atual</title>\n    <style>\n        body {\n            background-color:#2d2d2d;\n            width: 100%;\n        }\n\n        #display {\n            font: small-caps lighter 30px/150% \"Segoe UI\", Frutiger, \"Frutiger Linotype\", \"Dejavu Sans\", \"Helvetica Neue\", Arial, sans-serif;\n            text-align:left;\n            margin: 40px auto;\n            color:#fff;\n            border-left: 3px solid #ed1f24;\n            padding: 20px;\n        }\n    </style>\n    <script>\n        // Atualiza o texto da página\n        async function updateText() {\n            // Faz solicitação ao endopoint da API via AJAX\n            const xhr = new XMLHttpRequest();\n            xhr.open('GET', 'http://{{{payload.internalIPv4}}}:1880/recuperar-leituras', true);\n\n            // Atualiza os elementos de exibição\n            xhr.onreadystatechange = function () {\n                if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) { // AFAZER: Verificar se realmente precisa considerar 304 (sem alterações)\n                    const dados = JSON.parse(xhr.responseText);\n                    const item = dados[dados.length - 1]\n                    const textElement = document.getElementById('temperatura');\n                    textElement.textContent = `Temperatura: ${item.Valor} °${item.Escala}`.replace('.',',');\n                    const subtitulo =  document.getElementById('leitura');\n                    subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`\n                }\n            };\n            xhr.send();\n        }\n\n        // Chamada inicial à função\n        updateText();\n        setInterval(updateText, 5000); // Atualização a cada 10 segundos\n    </script>\n</head>\n<body>\n    <div id=\"display\">\n        <h1 id=\"temperatura\">Carregando...</h1>\n        <h2 id=\"leitura\">⌛</h2>\n    </div>\n</body>\n</html>",
+        "template": "<!DOCTYPE html>\n  <html>\n    <head>\n      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n      <style>\n        body {\n          background-color:#2d2d2d;\n          width: 100%;\n        }\n\n        #display {\n          font: small-caps lighter 20px/150% \"Segoe UI\", Frutiger, \"Frutiger Linotype\", \"Dejavu Sans\", \"Helvetica Neue\", Arial, sans-serif;\n          text-align:left;\n          margin: 40px auto;\n          color:#fff;\n          border-left: 3px solid #ed1f24;\n          padding: 20px;\n        }\n\n        .sidenav {\n          height: 100%;\n          width: 0;\n          position: fixed;\n          z-index: 1;\n          top: 0;\n          left: 0;\n          background-color: #111;\n          overflow-x: hidden;\n          transition: 0.5s;\n          padding-top: 60px;\n        }\n\n        .sidenav a {\n          font: small-caps lighter 20px/150% \"Segoe UI\", Frutiger, \"Frutiger Linotype\", \"Dejavu Sans\", \"Helvetica Neue\", Arial, sans-serif;\n          padding: 8px 8px 8px 32px;\n          text-decoration: none;\n          font-size: 25px;\n          color: #818181;\n          display: block;\n          transition: 0.3s;\n        }\n\n        .sidenav a:hover {\n          color: #f1f1f1;\n        }\n\n        .sidenav .closebtn {\n          position: absolute;\n          top: 0;\n          right: 25px;\n          font-size: 36px;\n          margin-left: 50px;\n        }\n\n        @media screen and (max-height: 450px) {\n          .sidenav {padding-top: 15px;}\n          .sidenav a {font-size: 18px;}\n        }\n      </style>\n    </head>\n    <body>\n      <div id=\"sideNav\" class=\"sidenav\">\n        <a href=\"javascript:void(0)\" class=\"closebtn\" onclick=\"closeNav()\">&times;</a>\n      </div>\n      <span style=\"font-size:75px;cursor:pointer\" onclick=\"openNav()\">&#9776;</span>\n\n      <div id=\"display\">\n        <h2 id=\"dispositivo\"></h2>\n        <h1 id=\"temperatura\">Carregando...</h1>\n        <h2 id=\"leitura\">⌛</h2>\n      </div>\n\n      <!-- Precisa ser abaixo, de forma que os elementos a serem alterados já estejam\n          disponíveis na hora da execução -->\n      <script>\n        let ID_DISPOSITIVO_;\n        function openNav() {\n          document.getElementById(\"sideNav\").style.width = \"100%\";\n        }\n\n        function closeNav() {\n          document.getElementById(\"sideNav\").style.width = \"0\";\n        }\n        const getPost = async () => {\n          const response = await fetch('http://{{{payload.internalIPv4}}}:1880/recuperar-dispositivos');\n          //const response = await fetch('http://{{{payload.internalIPv4}}}:1880/recuperar-leituras');\n          const dispositivos = await response.json();\n          return dispositivos;\n        };\n      \n        const sideNav = document.getElementById(\"sideNav\");\n\n        const displayOption = async () => {\n          const dispositivos = await getPost();\n          ID_DISPOSITIVO_ = dispositivos[0].DispositivoId;\n          updateText(ID_DISPOSITIVO_);\n          dispositivos.forEach(dispositivo => {\n              const novoLink = document.createElement(\"a\");\n              novoLink.href = dispositivo.DispositivoId;\n              novoLink.text = \"Dispositivo \" + dispositivo.DispositivoId;\n              novoLink.addEventListener(\"click\", function(event) {\n                event.preventDefault();\n                alterarDispositivo(dispositivo.DispositivoId);\n                closeNav();\n              });\n              sideNav.appendChild(novoLink);\n          });\n        };\n\n        const alterarDispositivo = (idDispositivo) => {\n          updateText(idDispositivo);\n        }\n\n        document.addEventListener(\"DOMContentLoaded\", function() {\n          displayOption();\n        });\n\n        async function updateText(idDispositivo) {\n          // Faz solicitação ao endopoint da API via AJAX\n          const xhr = new XMLHttpRequest();\n          xhr.open('GET', `http://{{{payload.internalIPv4}}}:1880/recuperar-leituras-dispositivo?idDispositivo=${idDispositivo}`, true);\n          //xhr.open('GET', `http://192.168.164.216:1880/recuperar-leituras-dispositivo?idDispositivo=${idDispositivo}`, true);\n\n\n          // Atualiza os elementos de exibição\n          xhr.onreadystatechange = function () {\n            if ((xhr.readyState === 4 && xhr.status === 200) || xhr.status === 304) { // AFAZER: Verificar se realmente precisa considerar 304 (sem alterações)\n            const dados = JSON.parse(xhr.responseText);\n            const item = dados[dados.length - 1]\n            console.log(item);\n            const dispositivo = document.getElementById('dispositivo');\n            dispositivo.textContent = `Dispositivo: ${item.DispositivoId}`;\n            const temperatura = document.getElementById('temperatura');\n            temperatura.textContent = `Temperatura: ${item.Valor} °${item.Escala}`.replace('.',',');\n            const subtitulo =  document.getElementById('leitura');\n            subtitulo.textContent = `Última Leitura: ${new Date(parseInt(item.Timestamp)).toLocaleString()}`\n          }\n        };\n        xhr.send();\n      }\n      updateText();\n    </script>\n  </body>\n</html> ",
         "output": "str",
         "x": 570,
         "y": 400,
         "wires": [
             [
-                "719d1614dea1e944"
+                "f4ec3abc99938966"
             ]
         ]
     },
     {
-        "id": "719d1614dea1e944",
+        "id": "f4ec3abc99938966",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -261,9 +250,9 @@
         "wires": []
     },
     {
-        "id": "da71397152764214",
+        "id": "c09ac2cb2c3d07f1",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Relatório Temperatura",
         "url": "relatorio",
         "method": "get",
@@ -273,14 +262,14 @@
         "y": 460,
         "wires": [
             [
-                "1c7eb49caedf70f8"
+                "13d9e3f42849f2b7"
             ]
         ]
     },
     {
-        "id": "eb86f816c8cac56a",
+        "id": "cb296dd91e144ca1",
         "type": "template",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "relatorio.html",
         "field": "payload",
         "fieldType": "msg",
@@ -292,14 +281,14 @@
         "y": 460,
         "wires": [
             [
-                "0f3dfc449915470e"
+                "3e28730fd4df0607"
             ]
         ]
     },
     {
-        "id": "0f3dfc449915470e",
+        "id": "3e28730fd4df0607",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -308,9 +297,9 @@
         "wires": []
     },
     {
-        "id": "a72b74d1345b0adb",
+        "id": "380f9f7d3dd9c667",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Criar Tabela",
         "url": "criar-tabela",
         "method": "get",
@@ -320,14 +309,14 @@
         "y": 540,
         "wires": [
             [
-                "9a4c5049a5c85638"
+                "2902e9e37156e2e8"
             ]
         ]
     },
     {
-        "id": "738883db7026bc94",
+        "id": "cae8e7fd21d98788",
         "type": "template",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "relatorio.html",
         "field": "payload",
         "fieldType": "msg",
@@ -339,14 +328,14 @@
         "y": 540,
         "wires": [
             [
-                "a454ff1da7dc1a1a"
+                "3820d1075cafc5be"
             ]
         ]
     },
     {
-        "id": "a454ff1da7dc1a1a",
+        "id": "3820d1075cafc5be",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -355,9 +344,9 @@
         "wires": []
     },
     {
-        "id": "2ce98430e987ddd4",
+        "id": "dedfc3d75fff5ead",
         "type": "sqlite",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "mydb": "3ba85b566413b6e9",
         "sqlquery": "msg.topic",
         "sql": "",
@@ -366,14 +355,15 @@
         "y": 540,
         "wires": [
             [
-                "738883db7026bc94"
+                "cae8e7fd21d98788",
+                "cca62f5cba68373b"
             ]
         ]
     },
     {
-        "id": "9a4c5049a5c85638",
+        "id": "2902e9e37156e2e8",
         "type": "function",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Consulta",
         "func": "msg.topic = \"CREATE TABLE LeituraTemperatura (DispositivoId INT, Valor NUMERIC, Escala CHAR, Timestamp VARCHAR);\"\nreturn msg;",
         "outputs": 1,
@@ -386,14 +376,14 @@
         "y": 540,
         "wires": [
             [
-                "2ce98430e987ddd4"
+                "dedfc3d75fff5ead"
             ]
         ]
     },
     {
-        "id": "7f8c6ab70f55dd8d",
+        "id": "413e4fcd12d9715f",
         "type": "ip",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "ip",
         "https": false,
         "timeout": "5000",
@@ -405,14 +395,14 @@
         "y": 400,
         "wires": [
             [
-                "f1ca0d8c91e05402"
+                "428e7b4a152bf8dc"
             ]
         ]
     },
     {
-        "id": "1c7eb49caedf70f8",
+        "id": "13d9e3f42849f2b7",
         "type": "ip",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "ip",
         "https": false,
         "timeout": "5000",
@@ -424,14 +414,14 @@
         "y": 460,
         "wires": [
             [
-                "eb86f816c8cac56a"
+                "cb296dd91e144ca1"
             ]
         ]
     },
     {
-        "id": "fb54ccb96c6eee7d",
+        "id": "74ec45c6b1c70f2c",
         "type": "function",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Consulta",
         "func": "msg.topic = `SELECT * FROM LeituraTemperatura WHERE DispositivoId = ${msg.req.query.idDispositivo}`\nreturn msg;",
         "outputs": 1,
@@ -444,14 +434,14 @@
         "y": 280,
         "wires": [
             [
-                "d1443b9249972ae5"
+                "e2b420634cc09abf"
             ]
         ]
     },
     {
-        "id": "d1443b9249972ae5",
+        "id": "e2b420634cc09abf",
         "type": "sqlite",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "mydb": "3ba85b566413b6e9",
         "sqlquery": "msg.topic",
         "sql": "",
@@ -460,14 +450,15 @@
         "y": 280,
         "wires": [
             [
-                "4d3a7c2736c4c9ee"
+                "07bfe5234255103a",
+                "cca62f5cba68373b"
             ]
         ]
     },
     {
-        "id": "4d3a7c2736c4c9ee",
+        "id": "07bfe5234255103a",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Resposta",
         "statusCode": "200",
         "headers": {},
@@ -476,9 +467,9 @@
         "wires": []
     },
     {
-        "id": "eddea34cc79c0e05",
+        "id": "181b5facd9ccfe10",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Leituras Dispositivo",
         "url": "recuperar-leituras-dispositivo",
         "method": "get",
@@ -488,14 +479,14 @@
         "y": 280,
         "wires": [
             [
-                "fb54ccb96c6eee7d"
+                "74ec45c6b1c70f2c"
             ]
         ]
     },
     {
-        "id": "16d4fd5469a6599b",
+        "id": "6e6519091a627862",
         "type": "function",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Consulta",
         "func": "msg.topic = `SELECT DISTINCT(DispositivoId) FROM LeituraTemperatura`\nreturn msg;",
         "outputs": 1,
@@ -508,14 +499,14 @@
         "y": 340,
         "wires": [
             [
-                "222839fb9fc01c4e"
+                "91bebe74562b1bee"
             ]
         ]
     },
     {
-        "id": "222839fb9fc01c4e",
+        "id": "91bebe74562b1bee",
         "type": "sqlite",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "mydb": "3ba85b566413b6e9",
         "sqlquery": "msg.topic",
         "sql": "",
@@ -524,14 +515,15 @@
         "y": 340,
         "wires": [
             [
-                "19bbe1bda0a55bde"
+                "6ccbb7cf33aaa674",
+                "cca62f5cba68373b"
             ]
         ]
     },
     {
-        "id": "19bbe1bda0a55bde",
+        "id": "6ccbb7cf33aaa674",
         "type": "http response",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Resposta",
         "statusCode": "200",
         "headers": {},
@@ -540,9 +532,9 @@
         "wires": []
     },
     {
-        "id": "ee675d6004e44ff9",
+        "id": "68c4b2c4afcaced9",
         "type": "http in",
-        "z": "aec62757f32bc0d1",
+        "z": "3da32864abf7bffb",
         "name": "Get Lista Dispositivos",
         "url": "recuperar-dispositivos",
         "method": "get",
@@ -552,8 +544,30 @@
         "y": 340,
         "wires": [
             [
-                "16d4fd5469a6599b"
+                "6e6519091a627862"
             ]
         ]
+    },
+    {
+        "id": "cca62f5cba68373b",
+        "type": "debug",
+        "z": "3da32864abf7bffb",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3ba85b566413b6e9",
+        "type": "sqlitedb",
+        "db": "/home/pi/IOT_Database/DBTemperatura",
+        "mode": "RWC"
     }
 ]
